@@ -10,7 +10,7 @@
 
 ## Introduction
 
-This project is for SOFT130070.01 Parallel Computing.
+This repo is for SOFT130070.01 Parallel Computing.
 
 
 
