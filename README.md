@@ -3,14 +3,14 @@
 
 * [Introduction](#introduction)
 * [Prerequisites](#prerequisites)
-* [Lab](#lab)
+* [Labs](#labs)
 * [References](#references)
 
 
 
 ## Introduction
 
-This repo is for SOFT130070.01 Parallel Computing.
+This repo is for SOFT130070.01 Parallel Computing Course Labs.
 
 
 
@@ -22,7 +22,7 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 
 
 
-## Lab
+## Labs
 
 - Lab 0
 
@@ -35,3 +35,4 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 ## References
 
 1. 
+
