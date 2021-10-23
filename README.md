@@ -10,14 +10,14 @@
 
 ## Introduction
 
-This repo is for SOFT130070.01 Parallel Computing Course Labs.
+This repo includes all labs in Parallel Computing course (SOFT130070.01) in Software School @Fudan University.
 
 
 
 
 ## Prerequisites
 
-Clang & MIT OpenCilk.
+Clang & MIT Open Cilk.
 
 For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940/kvfq2y/lu78ke).
 
@@ -28,6 +28,8 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 - Lab 0
 
   Warm-up: [LCS](https://www.yuque.com/u22299940/kvfq2y/zuqkcm)
+
+  [Reference answer](https://www.yuque.com/docs/share/0e72e2b9-4f7c-4084-9071-a696bd1c1f3d)
 
 - 
 
