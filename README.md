@@ -17,7 +17,7 @@ This repo includes all labs in Parallel Computing course (SOFT130070.01) in Soft
 
 ## Prerequisites
 
-Clang & MIT Open Cilk.
+Install `Clang` & `Open Cilk` framework.
 
 For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940/kvfq2y/lu78ke).
 
@@ -25,11 +25,13 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 
 ## Labs
 
-- Lab 0
+- Lab 0 (warm-up): LCS Problem
 
-  Warm-up: [LCS](https://www.yuque.com/u22299940/kvfq2y/zuqkcm)
+  Here're the [problem description](https://www.yuque.com/u22299940/kvfq2y/zuqkcm) and [reference answer](https://www.yuque.com/docs/share/0e72e2b9-4f7c-4084-9071-a696bd1c1f3d) by T.A.
 
-  [Reference answer](https://www.yuque.com/docs/share/0e72e2b9-4f7c-4084-9071-a696bd1c1f3d)
+- Lab 1: Parallel Solution for LCS
+
+  Here're the [problem description](https://www.yuque.com/docs/share/4f10c2e2-fed0-4c31-bc8a-c665a1c15fa5) and [reference answer]() by T.A.
 
 - 
 
