@@ -29,15 +29,17 @@ int lcs_basic(const char * _A, const char * _B, int M, int N) {
 
 int lcs_ad(const char * _A, const char * _B, int M, int N) {
 	int* dp = (int*)calloc(M + N + 1, sizeof(int));
+	int idxMin, idxMax, up, left;
 
     for (int i = 2; i <= M + N; ++i) {
-        int idxMin = (i <= M) ? (M - i + 2) : (i - M);
-        int idxMax = (i <= N) ? (M + i - 2) : (2 * N + M - i);
+        idxMin = (i <= M) ? (M - i + 2) : (i - M);
+        idxMax = (i <= N) ? (M + i - 2) : (2 * N + M - i);
         for (int j = idxMin; j <= idxMax; j += 2) {
 			if (_A[(i - j + M - 2) / 2] == _B[(i + j - M - 2) / 2])
                 ++dp[j];
 			else {
-				int up = dp[j + 1], left = dp[j - 1];
+				up = dp[j + 1];
+				left = dp[j - 1];
 				dp[j] = (up > left) ? up : left;
 			}
 		}
@@ -48,15 +50,18 @@ int lcs_ad(const char * _A, const char * _B, int M, int N) {
 
 int lcs_ad_parallel(const char * _A, const char * _B, int M, int N) {
 	int* dp = (int*)calloc(M + N + 1, sizeof(int));
+	int idxMin, idxMax, up, left;
 
     for (int i = 2; i <= M + N; ++i) {
-        int idxMin = (i <= M) ? (M - i + 2) : (i - M);
-        int idxMax = (i <= N) ? (M + i - 2) : (2 * N + M - i);
-        cilk_for (int j = idxMin; j <= idxMax; j += 2) {
+        idxMin = (i <= M) ? (M - i + 2) : (i - M);
+        idxMax = (i <= N) ? (M + i - 2) : (2 * N + M - i);
+        #pragma grainsize = 2048
+		cilk_for (int j = idxMin; j <= idxMax; j += 2) {
 			if (_A[(i - j + M - 2) / 2] == _B[(i + j - M - 2) / 2])
                 ++dp[j];
 			else {
-				int up = dp[j + 1], left = dp[j - 1];
+				up = dp[j + 1];
+				left = dp[j - 1];
 				dp[j] = (up > left) ? up : left;
 			}
 		}

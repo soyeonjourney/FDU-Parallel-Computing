@@ -9,7 +9,7 @@ SOURCES := $(shell find ./ -name "*.cpp")
 TARGET := main
 
 TEST_NUM ?= 5
-INPUT_MAX_LEN ?= 1000
+INPUT_MAX_LEN ?= 50000
 
 %: %.cpp $(SOURCES)
 	$(CC) $(CFLAGS) -o $@ $(SOURCES) 

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     const char * B_str = B.c_str();
 
     int lcs_len;
-    int answer_len = naive_lcs_2d(A, B);
+    int answer_len = lcs_basic(A_str, B_str, M, N);
 
     double tdiff;
 
