@@ -1,14 +1,12 @@
 #include <cassert>
 #include <cstdlib>
 #include <cstdio>
-#include <cstring>
 #include "utils.h"
 #include <cilk/cilk.h>
 #include <cilk/cilk_api.h>
 
-
-/*
-inline void print_node(cell_t* node) {
+inline void print_node(cell_t * node)
+{
     if (node == NULL) return;
 
     printf("(%d,%d)", node->i, node->j);
@@ -18,132 +16,25 @@ inline void print_node(cell_t* node) {
     else printf("[%c]", node->match);
 
     if (node->next_num > 0)
-        printf(": ");
+        printf(": ");  
 
-    for (int i = 0; i < node->next_num; i++)
-        printf("(%d,%d) ", node->next_list[i]->i, node->next_list[i]->j);
+    for(int i = 0; i < node->next_num; i++)
+        printf("(%d,%d) ", node->next_list[i]->i, node->next_list[i]->j); 
 
-    printf("\n");
-}
-*/
-
-inline void fprint_node(FILE* fp, cell_t* node) {
-    if (node == NULL) return;
-
-    fprintf(fp, "(%d,%d)", node->i, node->j);
-
-    if (node->match == '\0')
-        fprintf(fp, "[%s]", "\\0");
-    else fprintf(fp, "[%c]", node->match);
-
-    if (node->next_num > 0)
-        fprintf(fp, ": ");
-
-    for (int i = 0; i < node->next_num; i++)
-        fprintf(fp, "(%d,%d) ", node->next_list[i]->i, node->next_list[i]->j);
-
-    fprintf(fp, "\n");
+    printf("\n");  
 }
 
-void print_lcs_graph(cell_t* entry, const char* output_file) {
-    // All functions used below are defined in utils
-    lcsQueue* q = initialQueue();
-    enQueue(q, entry);
+void print_lcs_graph(cell_t * entry, const char * output_file)
+{
 
-    FILE* fp = fopen(output_file, "w");
-    while (q->front) {
-        fprint_node(fp, q->front->cell);
-        for (int i = 0; i < q->front->cell->next_num; ++i) {
-            cell_t* newCell = q->front->cell->next_list[i];
-            if (!newCell->visited)
-                enQueue(q, newCell);
-        }
-        deQueue(q);
-    }
-
-    fclose(fp);
 }
 
-void sequentialRecursion(FILE* fp, char* lcs, cell_t* cell) {
-    if (cell->next_num) {
-        if (cell->match)
-            lcs[cell->rank - 1] = cell->match;
-        for (int i = 0; i < cell->next_num; ++i)
-            sequentialRecursion(fp, lcs, cell->next_list[i]);
-    }
-    else
-        fprintf(fp, "%s\n", lcs);
+void output_all_lcs_seq(cell_t * entry, const char * output_file)
+{
+
 }
 
-void output_all_lcs_seq(cell_t* entry, const char* output_file) {
-    int lcsLen = entry->rank;
-    char* lcs = (char*)malloc(lcsLen * sizeof(char));
-    FILE* fp = fopen(output_file, "w");
-    sequentialRecursion(fp, lcs, entry);
-    fclose(fp);
-}
+void output_all_lcs_parallel(cell_t * entry, const char * output_folder)
+{
 
-void parallelOutput(FILE* fpList[], char** lcsTLS, lcsNode* node) {
-    int indexWorker = __cilkrts_get_worker_number();
-    FILE* fp = fpList[indexWorker];
-    char* lcs = lcsTLS[indexWorker];
-
-    lcsNode* nodecpy = node;
-    while (nodecpy->prev) {
-        if (nodecpy->cell->match)
-            lcs[nodecpy->cell->rank - 1] = nodecpy->cell->match;
-        nodecpy = nodecpy->prev;
-    }
-
-    sequentialRecursion(fp, lcs, node->cell);
-}
-
-void output_all_lcs_parallel(cell_t* entry, const char* output_folder) {
-    int numWorkers = __cilkrts_get_nworkers();
-    int lcsLen = entry->rank;
-
-    FILE** fpList = (FILE**)malloc(numWorkers * sizeof(FILE*));
-    char** lcsTLS = (char**)malloc(numWorkers * sizeof(char*));
-    for (int i = 0; i < numWorkers; ++i) {
-        char* temp = (char*)malloc((numWorkers / 10 + 2) * sizeof(char));
-        sprintf(temp, "%d", i);
-        char* filename = (char*)malloc((strlen(output_folder) + numWorkers / 10 + 7));
-        strcpy(filename, output_folder);
-        strcat(filename, "/");
-        strcat(filename, temp);
-        strcat(filename, ".txt");
-
-        fpList[i] = fopen(filename, "w");
-        lcsTLS[i] = (char*)malloc(lcsLen * sizeof(char));
-    }
-
-    lcsQueue* q = initialQueue();
-    enQueue(q, entry);
-    int numQNode = 1;
-    while ((q->front) && (numQNode < numWorkers)) {
-        for (int i = 0; i < q->front->cell->next_num; ++i) {
-            cell_t* newCell = q->front->cell->next_list[i];
-            if (!newCell->visited)
-                enQueue(q, newCell);
-        }
-        numQNode += q->front->cell->next_num - 1;
-        deQueue(q);
-    }
-
-    /*
-    for (lcsNode* node = q->front; node != q->rear; node = node->next)
-        cilk_spawn parallelOutput(fpList, lcsTLS, node);
-    parallelOutput(fpList, lcsTLS, q->rear);
-    cilk_sync;
-    */
-
-    lcsNode* node = q->front;
-    for (int i = 0; i < numQNode; ++i) {
-        cilk_spawn parallelOutput(fpList, lcsTLS, node);
-        node = node->next;
-    }
-    cilk_sync;
-
-    for (int i = 0; i < numWorkers; ++i)
-        fclose(fpList[i]);
 }
