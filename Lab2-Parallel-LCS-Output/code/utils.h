@@ -1,15 +1,26 @@
 typedef struct _cell {
     int i, j;
     int rank;
-    struct _cell * tail;
-    struct _cell * pretail;
-    struct _cell * head;
-    struct _cell * next;
+    struct _cell* tail;
+    struct _cell* pretail;
+    struct _cell* head;
+    struct _cell* next;
     int visited;
     int match;
     int next_num;
-    struct _cell ** next_list;
+    struct _cell** next_list;
 } cell_t;
+
+typedef struct _lcs_node {
+    cell_t* cell;
+    _lcs_node* prev;
+    _lcs_node* next;
+} lcsNode;
+
+typedef struct _lcs_queue {
+    lcsNode* front;
+    lcsNode* rear;
+} lcsQueue;
 
 #define SET_STRUCT(__type__, __lval__, ...)     \
     do {                                        \
@@ -19,5 +30,14 @@ typedef struct _cell {
 
 // #define ANTICANONICAL_DEBUG
 
-int naive_lcs_2d(const char * A, const char * B, int M, int N);
-cell_t * lcs_anticanonical(const char * A, const char * B, int M, int N);
+int naive_lcs_2d(const char* A, const char* B, int M, int N);
+
+cell_t* lcs_anticanonical(const char* A, const char* B, int M, int N);
+
+lcsNode* newNode(cell_t* cell);
+
+lcsQueue* initialQueue();
+
+void enQueue(lcsQueue* q, cell_t* cell);
+
+void deQueue(lcsQueue* q);
