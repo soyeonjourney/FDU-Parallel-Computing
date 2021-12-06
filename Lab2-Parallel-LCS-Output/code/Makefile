@@ -24,3 +24,6 @@ random:
 
 test:
 	./main ./input.txt
+
+cleanoutput:
+	rm ./output/*

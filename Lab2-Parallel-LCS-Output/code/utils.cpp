@@ -169,7 +169,7 @@ cell_t* lcs_anticanonical(const char* A, const char* B, int M, int N) {
 lcsNode* newNode(cell_t* cell) {
     lcsNode* temp = (lcsNode*)malloc(sizeof(lcsNode));
     temp->cell = cell;
-    temp->prev = NULL;
+    temp->parent = NULL;
     temp->next = NULL;
     return temp;
 }
@@ -194,12 +194,14 @@ void enQueue(lcsQueue* q, cell_t* cell) {
 
     // Add the new node at the end of queue and change rear
     q->rear->next = temp;
-    temp->prev = q->rear;
     q->rear = q->rear->next;
+
+    // Update parent
+    temp->parent = q->front;
 }
 
 // Function to remove a cell from given lcs queue
-void deQueue(lcsQueue* q) {
+void deQueue(lcsQueue* q, bool isFree) {
     // If queue is empty, return NULL.
     if (q->front == NULL)
         return;
@@ -210,10 +212,9 @@ void deQueue(lcsQueue* q) {
     q->front = q->front->next;
 
     // If front becomes NULL, then change rear also as NULL
-    if (q->front)
-        q->front->prev = NULL;
-    else
+    if (q->front == NULL)
         q->rear = NULL;
 
-    free(temp);
+    if (isFree)
+        free(temp);
 }

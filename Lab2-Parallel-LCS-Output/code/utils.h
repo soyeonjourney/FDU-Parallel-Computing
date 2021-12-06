@@ -13,7 +13,7 @@ typedef struct _cell {
 
 typedef struct _lcs_node {
     cell_t* cell;
-    _lcs_node* prev;
+    _lcs_node* parent;
     _lcs_node* next;
 } lcsNode;
 
@@ -40,4 +40,4 @@ lcsQueue* initialQueue();
 
 void enQueue(lcsQueue* q, cell_t* cell);
 
-void deQueue(lcsQueue* q);
+void deQueue(lcsQueue* q, bool isFree);

@@ -58,7 +58,7 @@ void print_lcs_graph(cell_t* entry, const char* output_file) {
             if (!newCell->visited)
                 enQueue(q, newCell);
         }
-        deQueue(q);
+        deQueue(q, true);
     }
 
     fclose(fp);
@@ -77,22 +77,22 @@ void sequentialRecursion(FILE* fp, char* lcs, cell_t* cell) {
 
 void output_all_lcs_seq(cell_t* entry, const char* output_file) {
     int lcsLen = entry->rank;
-    char* lcs = (char*)malloc(lcsLen * sizeof(char));
+    char* lcs = (char*)calloc(lcsLen, sizeof(char));
     FILE* fp = fopen(output_file, "w");
     sequentialRecursion(fp, lcs, entry);
     fclose(fp);
 }
 
-void parallelOutput(FILE* fpList[], char** lcsTLS, lcsNode* node) {
+void parallelOutput(FILE** fpList, char** lcsTLS, lcsNode* node) {
     int indexWorker = __cilkrts_get_worker_number();
     FILE* fp = fpList[indexWorker];
     char* lcs = lcsTLS[indexWorker];
 
-    lcsNode* nodecpy = node;
-    while (nodecpy->prev) {
-        if (nodecpy->cell->match)
-            lcs[nodecpy->cell->rank - 1] = nodecpy->cell->match;
-        nodecpy = nodecpy->prev;
+    lcsNode* parentNode = node->parent;
+    while (parentNode) {
+        if (parentNode->cell->match)
+            lcs[parentNode->cell->rank - 1] = parentNode->cell->match;
+        parentNode = parentNode->parent;
     }
 
     sequentialRecursion(fp, lcs, node->cell);
@@ -102,46 +102,36 @@ void output_all_lcs_parallel(cell_t* entry, const char* output_folder) {
     int numWorkers = __cilkrts_get_nworkers();
     int lcsLen = entry->rank;
 
-    FILE** fpList = (FILE**)malloc(numWorkers * sizeof(FILE*));
-    char** lcsTLS = (char**)malloc(numWorkers * sizeof(char*));
+    FILE** fpList = (FILE**)calloc(numWorkers, sizeof(FILE*));
+    char** lcsTLS = (char**)calloc(numWorkers, sizeof(char*));
     for (int i = 0; i < numWorkers; ++i) {
-        char* temp = (char*)malloc((numWorkers / 10 + 2) * sizeof(char));
-        sprintf(temp, "%d", i);
-        char* filename = (char*)malloc((strlen(output_folder) + numWorkers / 10 + 7));
+        char* index = (char*)calloc((numWorkers / 10 + 5), sizeof(char));
+        sprintf(index, "%d", i);
+        char* filename = (char*)calloc((strlen(output_folder) + numWorkers / 10 + 10), sizeof(char));
         strcpy(filename, output_folder);
         strcat(filename, "/");
-        strcat(filename, temp);
+        strcat(filename, index);
         strcat(filename, ".txt");
 
         fpList[i] = fopen(filename, "w");
-        lcsTLS[i] = (char*)malloc(lcsLen * sizeof(char));
+        lcsTLS[i] = (char*)calloc(lcsLen, sizeof(char));
     }
 
     lcsQueue* q = initialQueue();
     enQueue(q, entry);
     int numQNode = 1;
-    while ((q->front) && (numQNode < numWorkers)) {
+    while ((q->front->cell->rank > 1) && (numQNode < numWorkers)) {
         for (int i = 0; i < q->front->cell->next_num; ++i) {
             cell_t* newCell = q->front->cell->next_list[i];
-            if (!newCell->visited)
-                enQueue(q, newCell);
+            enQueue(q, newCell);
         }
         numQNode += q->front->cell->next_num - 1;
-        deQueue(q);
+        deQueue(q, false);
     }
 
-    /*
     for (lcsNode* node = q->front; node != q->rear; node = node->next)
         cilk_spawn parallelOutput(fpList, lcsTLS, node);
     parallelOutput(fpList, lcsTLS, q->rear);
-    cilk_sync;
-    */
-
-    lcsNode* node = q->front;
-    for (int i = 0; i < numQNode; ++i) {
-        cilk_spawn parallelOutput(fpList, lcsTLS, node);
-        node = node->next;
-    }
     cilk_sync;
 
     for (int i = 0; i < numWorkers; ++i)
