@@ -1,0 +1,197 @@
+\documentclass[10pt]{article}
+
+% \usepackage{ctex}
+\usepackage{bookmark}
+\usepackage{listings}
+\usepackage{epsfig}
+\usepackage{lscape}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{placeins}
+\usepackage{url}
+\usepackage{cases}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{subfigure}
+\usepackage{float}
+\usepackage{framed}
+\usepackage[c2]{optidef}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{endnotes}
+\usepackage{fontspec}
+\usepackage{tikz}
+\usepackage{amsbsy}
+
+
+\usepackage{booktabs}
+
+\oddsidemargin 0pt
+\evensidemargin 0pt
+\marginparwidth 10pt
+\marginparsep 10pt
+\topmargin -40pt
+\textwidth 6.5in
+\textheight 8.5in
+\parindent = 20pt
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\minimax}{minimax}
+
+\renewcommand{\algorithmicrequire}{ \textbf{function:}}
+\renewcommand{\algorithmicreturn}{ \textbf{end function}}
+\newcommand{\blue}[1]{\begin{color}{blue}#1\end{color}}
+\newcommand{\magenta}[1]{\begin{color}{magenta}#1\end{color}}
+\newcommand{\red}[1]{\begin{color}{red}#1\end{color}}
+\newcommand{\green}[1]{\begin{color}{green}#1\end{color}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\newtheorem{assumption}{Assumption}
+\newtheorem{definition}{Definition}
+%\newenvironment{proof}{{\noindent\it Proof}\quad}{\hfill $\square$\par}
+
+%\usepackage{sidecap}
+
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codemauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+	language=python,                % choose the language of the code
+	basicstyle=\footnotesize\ttfamily,       % the size of the fonts that are used for the code
+	numbers=left,                   % where to put the line-numbers
+	numberstyle=\tiny\color{codegray},      % the size of the fonts that are used for the line-numbers
+	stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+	numbersep=5pt,                  % how far the line-numbers are from the code
+	backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+	showspaces=false,               % show spaces adding particular underscores
+	showstringspaces=false,         % underline spaces within strings
+	showtabs=false,                 % show tabs within strings adding particular underscores
+	frame=single,                   % adds a frame around the code
+	tabsize=4,                      % sets default tabsize to 4 spaces  
+	captionpos=b,                   % sets the caption-position to bottom
+	breaklines=true,                % sets automatic line breaking
+	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+	escapeinside={\%*}{*)},
+	commentstyle=\color{codegreen},
+	keywordstyle=\bfseries\color{magenta},
+	stringstyle=\color{red},
+	identifierstyle=\color{codemauve},
+	keepspaces=true
+}
+
+
+\begin{document}
+
+\title{\bf A Brief Proof to QuickSort Tail Recursion}
+
+\author{Steven}
+\date{}
+\maketitle
+
+
+\section{Original Algorithm}
+
+In the classical QuickSort algorithm, we recursively apply the QuickSort to the sub-range
+up to the point of division and to the sub-range after it util there is only one element
+in the sub-range. So we call QuickSort function for $ 1+2+4+\cdots+n=2n-1 $ times.
+
+
+\section{Tail Recursion Optimization}
+
+Inspired by the tail recursion, we've got the optimized algorithm as follows.
+
+\begin{lstlisting}[language=C++]
+	void QuickSort(int *array, int p, int n) {
+		while (n > 1) {
+			int r = partition(array, p, n);
+			QuickSort(array, p, r);
+			*array += r + 1;
+			n -= r - 1;
+		}
+	}
+\end{lstlisting}
+
+\begin{center}
+	\begin{tikzpicture}[level/.style={sibling distance=45mm/#1}]
+		\node [circle,draw] (z){$\boldsymbol{n}$}
+		child {node [circle,draw] (a) {$\boldsymbol{\frac{n}{2}}$}
+				child {node [circle,draw] (b) {$\boldsymbol{\frac{n}{2^2}}$}
+						child {node {$\vdots$}
+								child {node [circle,draw] (d) {$\boldsymbol{\frac{n}{2^k}}$}}
+								child {node [circle,draw] (e) {$\frac{n}{2^k}$}}
+							}
+						child {node {$\vdots$}}
+					}
+				child {node [circle,draw] (g) {$\frac{n}{2^2}$}
+						child {node {$\vdots$}}
+						child {node {$\vdots$}}
+					}
+			}
+		child {node [circle,draw] (j) {$\frac{n}{2}$}
+				child {node [circle,draw] (k) {$\boldsymbol{\frac{n}{2^2}}$}
+						child {node {$\vdots$}}
+						child {node {$\vdots$}}
+					}
+				child {node [circle,draw] (l) {$\frac{n}{2^2}$}
+						child {node {$\vdots$}}
+						child {node (c){$\vdots$}
+								child {node [circle,draw] (o) {$\boldsymbol{\frac{n}{2^k}}$}}
+								child {node [circle,draw] (p) {$\frac{n}{2^k}$}
+										child [grow=right] {node (q) {$=$} edge from parent[draw=none]
+												child [grow=right] {node (q) {$\frac{n}{2}$} edge from parent[draw=none]
+														child [grow=up] {node (r) {$\vdots$} edge from parent[draw=none]
+																child [grow=up] {node (s) {$2$} edge from parent[draw=none]
+																		child [grow=up] {node (t) {$1$} edge from parent[draw=none]
+																				child [grow=up] {node (u) {$1$} edge from parent[draw=none]}
+																			}
+																	}
+															}
+														child [grow=down] {node (v) {$n$}edge from parent[draw=none]}
+													}
+											}
+									}
+							}
+					}
+			};
+		\path (o) -- (e) node (x) [midway] {$\cdots$}
+		child [grow=down] {
+				node (y) {$\displaystyle1+\sum_{i = 0}^{k-1} 2^i$}
+				edge from parent[draw=none]
+			};
+		\path (q) -- (r) node [midway] {+};
+		\path (s) -- (r) node [midway] {+};
+		\path (s) -- (t) node [midway] {+};
+		\path (s) -- (l) node [midway] {=};
+		\path (t) -- (u) node [midway] {+};
+		\path (z) -- (u) node [midway] {=};
+		\path (j) -- (t) node [midway] {=};
+		\path (y) -- (x) node [midway] {$\Downarrow$};
+		\path (q) -- (v) node [midway] {=};
+		\path (e) -- (x) node [midway] {$\cdots$};
+		\path (o) -- (x) node [midway] {$\cdots$};
+		\path (r) -- (c) node [midway] {$\cdots$};
+	\end{tikzpicture}
+\end{center}
+
+For each child node pair, only the left node will call QuickSort function, the other one's
+function call in original algorithm is replaced by the update of *array and n. And take a
+view of the bottom nodes, once we complete the calculation of the left node, the right one
+will break the loop because $n\ngtr 1$, and return to their parent node immediately. And if
+the parent node is also a right child node, it will complete function execution for the same
+reason.
+
+
+\end{document}
+
+
