@@ -31,13 +31,16 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 
 - Lab 1: Parallel Solution for LCS
 
-  Here're the [problem description](https://www.yuque.com/u22299940/kvfq2y/vc65so) and [reference answer]() .
+  Here's the [problem description](https://www.yuque.com/u22299940/kvfq2y/vc65so) .
 
-- 
+- Lab 2: Parallel Output for LCS
+
+  Here's the [problem description](https://www.yuque.com/u22299940/kvfq2y/nwz49v) .
 
 
 
 ## References
 
-1. 
+1. [Introduction to All Prefixes LCSs Graph (APLG)](https://www.yuque.com/u22299940/kvfq2y/cqbg3b) for Lab 2
+1. [Cilk Tutorial](http://faculty.knox.edu/dbunde/teaching/cilk/) 
 
