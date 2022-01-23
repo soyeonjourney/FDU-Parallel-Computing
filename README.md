@@ -3,6 +3,7 @@
 
 * [Introduction](#introduction)
 * [Prerequisites](#prerequisites)
+* [Homework](#homework)
 * [Labs](#labs)
 * [References](#references)
 
@@ -20,6 +21,16 @@ This repo includes all labs in Parallel Computing course (SOFT130070.01) in Soft
 Install `Clang` & `Open Cilk` framework.
 
 For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940/kvfq2y/lu78ke) .
+
+
+
+## Homework
+
+- Homework 1: A Brief Proof to QuickSort Tail Recursion
+
+  Here's the [reference answer](https://www.yuque.com/u22299940/kvfq2y/nap98k) .
+
+- Homework 2: A Brief Proof to Starvation Freedom
 
 
 
@@ -41,6 +52,6 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 
 ## References
 
-1. [Introduction to All Prefixes LCSs Graph (APLG)](https://www.yuque.com/u22299940/kvfq2y/cqbg3b) for Lab 2
+1. [Introduction to All Prefixes LCSs Graph (APLG)](https://www.yuque.com/u22299940/kvfq2y/cqbg3b) for Lab 2.
 1. [Cilk Tutorial](http://faculty.knox.edu/dbunde/teaching/cilk/) 
 
