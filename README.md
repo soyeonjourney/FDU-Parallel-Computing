@@ -1,4 +1,5 @@
-# Parallel-Computing (2021 Fall)
+<h1 align = "center">Parallel Computing (2021 Fall)</h1>
+
 ##  Contents
 
 * [Introduction](#introduction)
@@ -7,13 +8,9 @@
 * [Labs](#labs)
 * [References](#references)
 
-
-
 ## Introduction
 
 This repo includes all labs in Parallel Computing course (SOFT130070.01) in Software School @Fudan University.
-
-
 
 
 ## Prerequisites
@@ -22,8 +19,6 @@ Install `Clang` & `Open Cilk` framework.
 
 For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940/kvfq2y/lu78ke) .
 
-
-
 ## Homework
 
 - Homework 1: A Brief Proof to QuickSort Tail Recursion
@@ -31,8 +26,6 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
   Here's the [reference answer](https://www.yuque.com/u22299940/kvfq2y/nap98k) .
 
 - Homework 2: A Brief Proof to Starvation Freedom
-
-
 
 ## Labs
 
@@ -47,8 +40,6 @@ For more information, please visit [T.A.'s blog](https://www.yuque.com/u22299940
 - Lab 2: Parallel Output for LCS
 
   Here's the [problem description](https://www.yuque.com/u22299940/kvfq2y/nwz49v) .
-
-
 
 ## References
 
