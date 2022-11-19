@@ -115,6 +115,9 @@ void output_all_lcs_parallel(cell_t* entry, const char* output_folder) {
 
         fpList[i] = fopen(filename, "w");
         lcsTLS[i] = (char*)calloc(lcsLen, sizeof(char));
+
+        free(index);
+        free(filename);
     }
 
     lcsQueue* q = initialQueue();
@@ -136,4 +139,11 @@ void output_all_lcs_parallel(cell_t* entry, const char* output_folder) {
 
     for (int i = 0; i < numWorkers; ++i)
         fclose(fpList[i]);
+
+    for (int i = 0; i < numWorkers; ++i) {
+        free(lcsTLS[i]);
+        free(fpList[i]);
+    }
+    free(lcsTLS);
+    free(fpList);
 }

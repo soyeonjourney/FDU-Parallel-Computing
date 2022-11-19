@@ -24,6 +24,7 @@ int lcs_basic(const char * _A, const char * _B, int M, int N) {
 		}
 	}
 
+	free(dp);
 	return dp[N - 1];
 }
 
@@ -45,6 +46,7 @@ int lcs_ad(const char * _A, const char * _B, int M, int N) {
 		}
     }
 
+	free(dp);
     return dp[N];
 }
 
@@ -67,5 +69,6 @@ int lcs_ad_parallel(const char * _A, const char * _B, int M, int N) {
 		}
     }
 
+	free(dp);
     return dp[N];
 }
