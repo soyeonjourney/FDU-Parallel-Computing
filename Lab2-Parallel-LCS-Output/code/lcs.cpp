@@ -1,11 +1,12 @@
-#include <cassert>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include "utils.h"
 #include <cilk/cilk.h>
 #include <cilk/cilk_api.h>
 
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+#include "utils.h"
 
 /*
 inline void print_node(cell_t* node) {
@@ -34,10 +35,10 @@ inline void fprint_node(FILE* fp, cell_t* node) {
 
     if (node->match == '\0')
         fprintf(fp, "[%s]", "\\0");
-    else fprintf(fp, "[%c]", node->match);
+    else
+        fprintf(fp, "[%c]", node->match);
 
-    if (node->next_num > 0)
-        fprintf(fp, ": ");
+    if (node->next_num > 0) fprintf(fp, ": ");
 
     for (int i = 0; i < node->next_num; i++)
         fprintf(fp, "(%d,%d) ", node->next_list[i]->i, node->next_list[i]->j);
@@ -55,8 +56,7 @@ void print_lcs_graph(cell_t* entry, const char* output_file) {
         fprint_node(fp, q->front->cell);
         for (int i = 0; i < q->front->cell->next_num; ++i) {
             cell_t* newCell = q->front->cell->next_list[i];
-            if (!newCell->visited)
-                enQueue(q, newCell);
+            if (!newCell->visited) enQueue(q, newCell);
         }
         deQueue(q, true);
     }
@@ -66,12 +66,10 @@ void print_lcs_graph(cell_t* entry, const char* output_file) {
 
 void sequentialRecursion(FILE* fp, char* lcs, cell_t* cell) {
     if (cell->next_num) {
-        if (cell->match)
-            lcs[cell->rank - 1] = cell->match;
+        if (cell->match) lcs[cell->rank - 1] = cell->match;
         for (int i = 0; i < cell->next_num; ++i)
             sequentialRecursion(fp, lcs, cell->next_list[i]);
-    }
-    else
+    } else
         fprintf(fp, "%s\n", lcs);
 }
 
@@ -107,7 +105,8 @@ void output_all_lcs_parallel(cell_t* entry, const char* output_folder) {
     for (int i = 0; i < numWorkers; ++i) {
         char* index = (char*)calloc((numWorkers / 10 + 5), sizeof(char));
         sprintf(index, "%d", i);
-        char* filename = (char*)calloc((strlen(output_folder) + numWorkers / 10 + 10), sizeof(char));
+        char* filename = (char*)calloc(
+            (strlen(output_folder) + numWorkers / 10 + 10), sizeof(char));
         strcpy(filename, output_folder);
         strcat(filename, "/");
         strcat(filename, index);
@@ -137,8 +136,7 @@ void output_all_lcs_parallel(cell_t* entry, const char* output_folder) {
     parallelOutput(fpList, lcsTLS, q->rear);
     cilk_sync;
 
-    for (int i = 0; i < numWorkers; ++i)
-        fclose(fpList[i]);
+    for (int i = 0; i < numWorkers; ++i) fclose(fpList[i]);
 
     for (int i = 0; i < numWorkers; ++i) {
         free(lcsTLS[i]);
